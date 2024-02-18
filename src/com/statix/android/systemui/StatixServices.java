@@ -17,8 +17,6 @@ import com.android.systemui.shade.NotificationShadeWindowView;
 import com.android.systemui.shade.ShadeViewController;
 import com.android.systemui.statusbar.policy.FlashlightController;
 
-import com.statix.android.systemui.ambient.AmbientIndicationContainer;
-import com.statix.android.systemui.ambient.AmbientIndicationService;
 import com.statix.android.systemui.elmyra.ElmyraService;
 import com.statix.android.systemui.smartpixels.SmartPixelsReceiver;
 
@@ -63,13 +61,6 @@ public class StatixServices extends VendorServices {
                         .hasSystemFeature("android.hardware.sensor.assist")) {
             addService(new ElmyraService(mContext, mAssistManager, mFlashlightController));
         }
-        AmbientIndicationContainer ambientIndicationContainer =
-                (AmbientIndicationContainer)
-                        mNotificationShadeWindowView.findViewById(
-                                R.id.ambient_indication_container);
-        ambientIndicationContainer.initializeView(mShadeViewController);
-        addService(
-                new AmbientIndicationService(mContext, ambientIndicationContainer, mAlarmManager));
     }
 
     @Override
