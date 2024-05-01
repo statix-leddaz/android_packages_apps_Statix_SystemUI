@@ -36,8 +36,6 @@ import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.shade.NotificationShadeWindowView;
 import com.android.systemui.statusbar.policy.BatteryController;
 
-import com.statix.android.systemui.ambient.AmbientIndicationContainer;
-
 import vendor.lineage.powershare.IPowerShare;
 
 import java.util.NoSuchElementException;
@@ -51,7 +49,6 @@ public class PowerShareTile extends QSTileImpl<BooleanState>
 
     private final IPowerShare mPowerShare;
     private NotificationShadeWindowView mNotificationShadeWindowView;
-    private AmbientIndicationContainer mAmbientContainer;
     private BatteryController mBatteryController;
     private NotificationManager mNotificationManager;
     private Notification mNotification;
@@ -112,14 +109,7 @@ public class PowerShareTile extends QSTileImpl<BooleanState>
         batteryController.addCallback(this);
     }
 
-    public void initialize() {
-        if (isAvailable()) {
-            mAmbientContainer =
-                    (AmbientIndicationContainer)
-                            mNotificationShadeWindowView.findViewById(
-                                    R.id.ambient_indication_container);
-        }
-    }
+    public void initialize() {}
 
     @Override
     public void onPowerSaveChanged(boolean isPowerSave) {
@@ -149,14 +139,8 @@ public class PowerShareTile extends QSTileImpl<BooleanState>
         try {
             if (mPowerShare.isEnabled()) {
                 mNotificationManager.notify(NOTIFICATION_ID, mNotification);
-                if (mAmbientContainer != null) {
-                    mAmbientContainer.setReverseChargingMessage("Sharing battery");
-                }
             } else {
                 mNotificationManager.cancel(NOTIFICATION_ID);
-                if (mAmbientContainer != null) {
-                    mAmbientContainer.setReverseChargingMessage("");
-                }
             }
         } catch (RemoteException ex) {
             ex.printStackTrace();
