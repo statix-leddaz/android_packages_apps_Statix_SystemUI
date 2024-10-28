@@ -14,6 +14,7 @@ import android.hardware.SensorPrivacyManager;
 import com.android.keyguard.KeyguardViewController;
 import com.android.systemui.ScreenDecorationsModule;
 import com.android.systemui.accessibility.SystemActionsModule;
+import com.android.systemui.assist.AssistManager;
 import com.android.systemui.battery.BatterySaverModule;
 import com.android.systemui.biometrics.FingerprintInteractiveToAuthProvider;
 import com.android.systemui.controls.controller.ControlsTileResourceConfiguration;
@@ -67,6 +68,7 @@ import com.android.systemui.unfold.UnfoldTransitionModule;
 import com.android.systemui.volume.dagger.VolumeModule;
 import com.android.systemui.wallpapers.dagger.WallpaperModule;
 
+import com.statix.android.systemui.assist.StatixAssistManager;
 import com.statix.android.systemui.biometrics.FingerprintExtProvider;
 import com.statix.android.systemui.biometrics.FingerprintInteractiveToAuthProviderImpl;
 import com.statix.android.systemui.controls.StatixControlsTileResourceConfigurationImpl;
@@ -220,4 +222,7 @@ public abstract class SystemUIStatixModule {
     @Binds
     abstract FingerprintInteractiveToAuthProvider bindFingerprintInteractiveToAuthProviderImpl(
             FingerprintInteractiveToAuthProviderImpl impl);
+
+    @Binds
+    abstract AssistManager bindAssistManager(StatixAssistManager assistManager);
 }
