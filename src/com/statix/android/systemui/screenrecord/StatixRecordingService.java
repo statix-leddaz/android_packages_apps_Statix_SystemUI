@@ -12,10 +12,8 @@ import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
@@ -109,18 +107,21 @@ public class StatixRecordingService extends RecordingService {
     @Override
     protected Notification createSaveNotification(ScreenMediaRecorder.SavedRecording recording) {
         Notification originalNotification = super.createSaveNotification(recording);
-        Notification.Builder originalBuilder = Notification.Builder.recoverBuilder(this, originalNotification);
+        Notification.Builder originalBuilder =
+                Notification.Builder.recoverBuilder(this, originalNotification);
 
         // BEGIN: Keep in sync with AOSP
-        Notification.Action shareAction = new Notification.Action.Builder(
-                Icon.createWithResource(this, R.drawable.ic_screenrecord),
-                provideRecordingServiceStrings().getShareLabel(),
-                PendingIntent.getService(
-                        this,
-                        REQUEST_CODE,
-                        getShareIntent(this, recording.getUri().toString()),
-                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))
-                .build();
+        Notification.Action shareAction =
+                new Notification.Action.Builder(
+                                Icon.createWithResource(this, R.drawable.ic_screenrecord),
+                                provideRecordingServiceStrings().getShareLabel(),
+                                PendingIntent.getService(
+                                        this,
+                                        REQUEST_CODE,
+                                        getShareIntent(this, recording.getUri().toString()),
+                                        PendingIntent.FLAG_UPDATE_CURRENT
+                                                | PendingIntent.FLAG_IMMUTABLE))
+                        .build();
         // END: Keep in sync with AOSP
 
         Notification.Action deleteAction =
@@ -143,8 +144,10 @@ public class StatixRecordingService extends RecordingService {
 
     // Keep in sync with AOSP.
     private Intent getShareIntent(Context context, String path) {
-        return new Intent(context, RecordingService.class).setAction(ACTION_SHARE)
-                .putExtra(EXTRA_PATH, path);
+        return new Intent(context, RecordingService.class)
+                .setAction(ACTION_SHARE)
+                .putExtra(EXTRA_PATH, path)
+                .putExtra(EXTRA_NOTIFICATION_ID, mNotificationId);
     }
 
     @Override

@@ -13,7 +13,9 @@ import android.hardware.SensorPrivacyManager;
 
 import com.android.keyguard.KeyguardViewController;
 import com.android.systemui.ScreenDecorationsModule;
+import com.android.systemui.accessibility.AccessibilityModule;
 import com.android.systemui.accessibility.SystemActionsModule;
+import com.android.systemui.accessibility.data.repository.AccessibilityRepositoryModule;
 import com.android.systemui.assist.AssistManager;
 import com.android.systemui.battery.BatterySaverModule;
 import com.android.systemui.biometrics.FingerprintInteractiveToAuthProvider;
@@ -24,6 +26,7 @@ import com.android.systemui.dock.DockManager;
 import com.android.systemui.dock.DockManagerImpl;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.globalactions.GlobalActionsModule;
+import com.android.systemui.inputdevice.tutorial.KeyboardTouchpadTutorialModule;
 import com.android.systemui.keyguard.ui.view.layout.blueprints.KeyguardBlueprintModule;
 import com.android.systemui.keyguard.ui.view.layout.sections.KeyguardSectionsModule;
 import com.android.systemui.media.dagger.MediaModule;
@@ -33,7 +36,6 @@ import com.android.systemui.navigationbar.NavigationBarControllerModule;
 import com.android.systemui.navigationbar.gestural.GestureModule;
 import com.android.systemui.plugins.qs.QSFactory;
 import com.android.systemui.qs.dagger.QSModule;
-import com.android.systemui.qs.tileimpl.QSFactoryImpl;
 import com.android.systemui.reardisplay.RearDisplayModule;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.RecentsImplementation;
@@ -42,6 +44,7 @@ import com.android.systemui.rotationlock.RotationLockNewModule;
 import com.android.systemui.scene.SceneContainerFrameworkModule;
 import com.android.systemui.screenshot.ReferenceScreenshotModule;
 import com.android.systemui.settings.MultiUserUtilsModule;
+import com.android.systemui.settings.UserTracker;
 import com.android.systemui.shade.NotificationShadeWindowControllerImpl;
 import com.android.systemui.shade.ShadeModule;
 import com.android.systemui.statusbar.CommandQueue;
@@ -61,15 +64,15 @@ import com.android.systemui.statusbar.policy.IndividualSensorPrivacyController;
 import com.android.systemui.statusbar.policy.IndividualSensorPrivacyControllerImpl;
 import com.android.systemui.statusbar.policy.SensorPrivacyController;
 import com.android.systemui.statusbar.policy.SensorPrivacyControllerImpl;
-import com.android.systemui.toast.ToastModule;
 import com.android.systemui.theme.ThemeOverlayController;
+import com.android.systemui.toast.ToastModule;
+import com.android.systemui.touchpad.tutorial.TouchpadTutorialModule;
 import com.android.systemui.unfold.SysUIUnfoldStartableModule;
 import com.android.systemui.unfold.UnfoldTransitionModule;
 import com.android.systemui.volume.dagger.VolumeModule;
 import com.android.systemui.wallpapers.dagger.WallpaperModule;
 
 import com.statix.android.systemui.assist.StatixAssistManager;
-import com.statix.android.systemui.biometrics.FingerprintExtProvider;
 import com.statix.android.systemui.biometrics.FingerprintInteractiveToAuthProviderImpl;
 import com.statix.android.systemui.controls.StatixControlsTileResourceConfigurationImpl;
 import com.statix.android.systemui.power.dagger.StatixPowerModule;
@@ -100,40 +103,45 @@ import javax.inject.Named;
  * This is different from {@link SystemUIModule} which should be used for pieces of required
  * SystemUI code that variants of SystemUI _must_ include to function correctly.
  */
-@Module(includes = {
-        AospPolicyModule.class,
-        BatterySaverModule.class,
-        CollapsedStatusBarFragmentStartableModule.class,
-        ConnectingDisplayViewModel.StartableModule.class,
-        GestureModule.class,
-        GlobalActionsModule.class,
-        HeadsUpModule.class,
-        KeyboardShortcutsModule.class,
-        KeyguardBlueprintModule.class,
-        KeyguardSectionsModule.class,
-        MediaModule.class,
-        MediaMuteAwaitConnectionCli.StartableModule.class,
-        MultiUserUtilsModule.class,
-        NavigationBarControllerModule.class,
-        NearbyMediaDevicesManager.StartableModule.class,
-        QSModule.class,
-        RearDisplayModule.class,
-        ReferenceScreenshotModule.class,
-        RotationLockModule.class,
-        RotationLockNewModule.class,
-        SceneContainerFrameworkModule.class,
-        ScreenDecorationsModule.class,
-        ShadeModule.class,
-        StatixStartCentralSurfacesModule.class,
-        StatixPowerModule.class,
-        StatixQSModule.class,
-        SystemActionsModule.class,
-        SysUIUnfoldStartableModule.class,
-        ToastModule.class,
-        UnfoldTransitionModule.Startables.class,
-        VolumeModule.class,
-        WallpaperModule.class
-})
+@Module(
+        includes = {
+            AccessibilityModule.class,
+            AccessibilityRepositoryModule.class,
+            AospPolicyModule.class,
+            BatterySaverModule.class,
+            CollapsedStatusBarFragmentStartableModule.class,
+            ConnectingDisplayViewModel.StartableModule.class,
+            GestureModule.class,
+            GlobalActionsModule.class,
+            HeadsUpModule.class,
+            KeyboardShortcutsModule.class,
+            KeyguardBlueprintModule.class,
+            KeyguardSectionsModule.class,
+            KeyboardTouchpadTutorialModule.class,
+            MediaModule.class,
+            MediaMuteAwaitConnectionCli.StartableModule.class,
+            MultiUserUtilsModule.class,
+            NavigationBarControllerModule.class,
+            NearbyMediaDevicesManager.StartableModule.class,
+            QSModule.class,
+            RearDisplayModule.class,
+            ReferenceScreenshotModule.class,
+            RotationLockModule.class,
+            RotationLockNewModule.class,
+            SceneContainerFrameworkModule.class,
+            ScreenDecorationsModule.class,
+            ShadeModule.class,
+            StatixStartCentralSurfacesModule.class,
+            StatixPowerModule.class,
+            StatixQSModule.class,
+            SystemActionsModule.class,
+            SysUIUnfoldStartableModule.class,
+            ToastModule.class,
+            TouchpadTutorialModule.class,
+            UnfoldTransitionModule.Startables.class,
+            VolumeModule.class,
+            WallpaperModule.class
+        })
 public abstract class SystemUIStatixModule {
 
     @SysUISingleton
@@ -159,9 +167,9 @@ public abstract class SystemUIStatixModule {
     @Provides
     @SysUISingleton
     static IndividualSensorPrivacyController provideIndividualSensorPrivacyController(
-            SensorPrivacyManager sensorPrivacyManager) {
-        IndividualSensorPrivacyController spC = new IndividualSensorPrivacyControllerImpl(
-                sensorPrivacyManager);
+            SensorPrivacyManager sensorPrivacyManager, UserTracker userTracker) {
+        IndividualSensorPrivacyController spC =
+                new IndividualSensorPrivacyControllerImpl(sensorPrivacyManager, userTracker);
         spC.init();
         return spC;
     }
@@ -178,7 +186,9 @@ public abstract class SystemUIStatixModule {
 
     @Provides
     @SysUISingleton
-    static Recents provideRecents(Context context, RecentsImplementation recentsImplementation,
+    static Recents provideRecents(
+            Context context,
+            RecentsImplementation recentsImplementation,
             CommandQueue commandQueue) {
         return new Recents(context, recentsImplementation, commandQueue);
     }

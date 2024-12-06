@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2022 The PixelExperience Project
+ * Copyright (C) 2024 StatiXOS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.systemui.Dependency;
+import com.android.systemui.user.domain.interactor.SelectedUserInteractor;
 
 public class AmbientIndicationService extends BroadcastReceiver {
     private final AlarmManager mAlarmManager;
@@ -42,6 +44,7 @@ public class AmbientIndicationService extends BroadcastReceiver {
                 }
             };
     private final AlarmManager.OnAlarmListener mHideIndicationListener;
+    private final SelectedUserInteractor mSelectedUserInteractor;
 
     private static final String HIDE_AMBIENT_ACTION =
             "com.google.android.ambientindication.action.AMBIENT_INDICATION_HIDE";
@@ -51,10 +54,12 @@ public class AmbientIndicationService extends BroadcastReceiver {
     public AmbientIndicationService(
             Context context,
             AmbientIndicationContainer ambientIndicationContainer,
+            SelectedUserInteractor selectedUserInteractor,
             AlarmManager alarmManager) {
         mContext = context;
         mAmbientIndicationContainer = ambientIndicationContainer;
         mAlarmManager = alarmManager;
+        mSelectedUserInteractor = selectedUserInteractor;
         mHideIndicationListener = mAmbientIndicationContainer::hideAmbientMusic;
         start();
     }
@@ -144,7 +149,7 @@ public class AmbientIndicationService extends BroadcastReceiver {
     }
 
     private int getCurrentUser() {
-        return KeyguardUpdateMonitor.getCurrentUser();
+        return mSelectedUserInteractor.getSelectedUserId();
     }
 
     private void onUserSwitched() {

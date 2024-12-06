@@ -20,6 +20,7 @@ import com.android.systemui.power.domain.interactor.PowerInteractor;
 import com.android.systemui.shade.NotificationShadeWindowView;
 import com.android.systemui.shade.ShadeViewController;
 import com.android.systemui.statusbar.policy.FlashlightController;
+import com.android.systemui.user.domain.interactor.SelectedUserInteractor;
 import com.android.systemui.util.wakelock.WakeLockLogger;
 
 import com.statix.android.systemui.ambient.AmbientIndicationContainer;
@@ -47,6 +48,7 @@ public class StatixServices extends VendorServices {
     private final Lazy<Handler> mMainHandler;
     private final NotificationShadeWindowView mNotificationShadeWindowView;
     private final PowerInteractor mPowerInteractor;
+    private final SelectedUserInteractor mSelectedUserInteractor;
     private final ShadeViewController mShadeViewController;
     private final WakeLockLogger mWakelockLogger;
 
@@ -61,6 +63,7 @@ public class StatixServices extends VendorServices {
             FlashlightController flashlightController,
             NotificationShadeWindowView notificationShadeWindowView,
             PowerInteractor powerInteractor,
+            SelectedUserInteractor selectedUserInteractor,
             ShadeViewController shadeViewController,
             WakeLockLogger wakeLockLogger,
             @Background Lazy<Handler> bgHandler,
@@ -73,6 +76,7 @@ public class StatixServices extends VendorServices {
         mFlashlightController = flashlightController;
         mNotificationShadeWindowView = notificationShadeWindowView;
         mPowerInteractor = powerInteractor;
+        mSelectedUserInteractor = selectedUserInteractor;
         mShadeViewController = shadeViewController;
         mWakelockLogger = wakeLockLogger;
         mBgHandler = bgHandler;
@@ -94,7 +98,7 @@ public class StatixServices extends VendorServices {
         ambientIndicationContainer.initializeView(
                 mShadeViewController, mPowerInteractor, mActivityStarter, mWakelockLogger, mBgHandler, mMainHandler);
         addService(
-                new AmbientIndicationService(mContext, ambientIndicationContainer, mAlarmManager));
+                new AmbientIndicationService(mContext, ambientIndicationContainer, mSelectedUserInteractor, mAlarmManager));
     }
 
     @Override
